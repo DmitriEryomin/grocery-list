@@ -1,9 +1,4 @@
-import {Roboto} from 'next/font/google';
-
-const inter = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-});
+import Providers from './providers';
 
 export const metadata = {
   title: 'Groceries',
@@ -11,5 +6,5 @@ export const metadata = {
 };
 
 export default function GroceryLayout({children}: {children: React.ReactNode}) {
-  return <section className={inter.className}>{children}</section>;
+  return <Providers>{children}</Providers>;
 }
