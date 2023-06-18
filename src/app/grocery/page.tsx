@@ -9,11 +9,15 @@ export default function Grocery() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
   return (
     <Container maxWidth="sm" sx={{paddingTop: 4}}>
       <Stack spacing={4}>
         <GroceryForm />
-        <GroceryList />
+        <GroceryList onEdit={handleEdit} />
       </Stack>
       <EditGroceryForm
         onClose={() => {

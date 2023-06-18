@@ -12,13 +12,17 @@ import {
 
 import EditIcon from '@mui/icons-material/Edit';
 
-export const GroceryList = () => {
+type GroceryListProps = {
+  onEdit: () => void;
+};
+
+export const GroceryList = ({onEdit}: GroceryListProps) => {
   return (
     <List>
       <ListItem
         disablePadding
         secondaryAction={
-          <IconButton edge="end">
+          <IconButton edge="end" onClick={onEdit}>
             <EditIcon />
           </IconButton>
         }
