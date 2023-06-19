@@ -1,69 +1,38 @@
-import {useState} from 'react';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
-import {
-  Button,
-  Grid,
-  TextField,
-  Stack,
-  IconButton,
-  SelectChangeEvent,
-} from '@mui/material';
+import {Button, Grid, TextField, Stack, IconButton} from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
 import {QuantityFormControl} from '../molecules/QuantityFormControl';
-import {QuantityType} from '../enums/QuantityType';
+import {useGroceryForm} from '../hooks/useGroceryForm';
 import {createGrocery} from '../services';
 
 export const GroceryForm = () => {
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState<number | ''>(1);
-  const [quantityType, setQuantityType] = useState(QuantityType.kgs);
+  const {
+    handleChange,
+    isValid,
+    form,
+    decrementQuantity,
+    incrementQuantity,
+    reset,
+  } = useGroceryForm();
 
   const queryClient = useQueryClient();
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === '') {
-      setQuantity('');
-      return;
-    }
-    setQuantity(parseInt(e.target.value));
-  };
-
-  const handleChangeQuantityType = (e: SelectChangeEvent) => {
-    setQuantityType(e.target.value as QuantityType);
-  };
-
-  const decrement = () => {
-    setQuantity((prevValue) => (prevValue as number) - 1);
-  };
-
-  const increment = () => {
-    setQuantity((prevValue) => (prevValue as number) + 1);
-  };
-
-  const isAddActive = name && quantity;
-  const isDecrementActive = !!quantity;
 
   const mutation = useMutation({
     mutationFn: createGrocery,
     onSuccess: () => {
-      // Invalidate and refetch
+      reset();
       queryClient.invalidateQueries({queryKey: ['groceries']});
     },
   });
 
   const addGrocery = () => {
     mutation.mutate({
-      name,
-      quantity: quantity as number,
-      quantityType,
+      ...form,
+      completed: false,
     });
   };
 
@@ -72,8 +41,8 @@ export const GroceryForm = () => {
       <Grid container alignItems="end" justifyContent="space-between">
         <Grid item xs={8}>
           <TextField
-            value={name}
-            onChange={handleNameChange}
+            value={form.name}
+            onChange={handleChange('name')}
             fullWidth
             label="Grocery Name"
             variant="standard"
@@ -82,7 +51,7 @@ export const GroceryForm = () => {
         <Grid item xs={3}>
           <Button
             onClick={addGrocery}
-            disabled={!isAddActive}
+            disabled={!isValid}
             fullWidth
             variant="contained"
           >
@@ -92,16 +61,16 @@ export const GroceryForm = () => {
       </Grid>
       <Grid container alignItems="end" justifyContent="space-between">
         <QuantityFormControl
-          value={quantity}
-          type={quantityType}
-          onValueChange={handleChangeQuantity}
-          onTypeChange={handleChangeQuantityType}
+          value={form.quantity}
+          type={form.quantityType}
+          onValueChange={handleChange('quantity')}
+          onTypeChange={handleChange('quantityType')}
         />
         <Grid container item xs={3} justifyContent="space-between">
-          <IconButton onClick={decrement} disabled={!isDecrementActive}>
+          <IconButton onClick={decrementQuantity} disabled={!form.quantity}>
             <RemoveIcon />
           </IconButton>
-          <IconButton onClick={increment}>
+          <IconButton onClick={incrementQuantity}>
             <AddIcon />
           </IconButton>
         </Grid>

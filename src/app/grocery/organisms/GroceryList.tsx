@@ -14,10 +14,10 @@ import {useQuery} from '@tanstack/react-query';
 import {getGroceries} from '../services';
 
 type GroceryListProps = {
-  onEdit: () => void;
+  onEdit: (id: string) => void;
 };
 
-export const GroceryList = () => {
+export const GroceryList = ({onEdit}: GroceryListProps) => {
   const {data, isLoading} = useQuery({
     queryKey: ['groceries'],
     queryFn: getGroceries,
@@ -32,7 +32,7 @@ export const GroceryList = () => {
           key={_id}
           disablePadding
           secondaryAction={
-            <IconButton edge="end">
+            <IconButton edge="end" onClick={() => onEdit(_id)}>
               <EditIcon />
             </IconButton>
           }

@@ -12,19 +12,27 @@ import {QuantityType} from '../enums/QuantityType';
 
 type QuantityFormControlProps = {
   value: number | '';
+  xs?: number;
   type: QuantityType;
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onTypeChange: (e: SelectChangeEvent) => void;
 };
 
 export const QuantityFormControl = ({
+  xs = 8,
   value,
   type,
   onValueChange,
   onTypeChange,
 }: QuantityFormControlProps) => {
   return (
-    <Grid container item alignItems="end" xs={8} justifyContent="space-between">
+    <Grid
+      container
+      item
+      alignItems="end"
+      xs={xs}
+      justifyContent="space-between"
+    >
       <Grid item xs={5}>
         <TextField
           value={value}
