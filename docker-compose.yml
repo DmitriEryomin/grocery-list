@@ -1,0 +1,21 @@
+version: '3'
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - grocery-app
+    depends_on:
+      - mongo-db
+  mongo-db:
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - grocery-app
+networks:
+  grocery-app:
+    driver: bridge
