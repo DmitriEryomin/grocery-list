@@ -25,6 +25,28 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  request: NextRequest,
+  context: {params: Record<string, any>}
+) {
+  try {
+    const {
+      params: {id},
+    } = context;
+
+    const client = await clientPromise;
+    const partialGrocery = await request.json();
+
+    const tasks = client.db('gojilabs').collection('groceries');
+
+    await tasks.updateOne({_id: new ObjectId(id)}, {$set: partialGrocery});
+
+    return NextResponse.json({ok: true}, {status: 200});
+  } catch (error) {
+    return NextResponse.json('Something went wrong!', {status: 500});
+  }
+}
+
 export async function GET(
   request: NextRequest,
   context: {params: Record<string, any>}

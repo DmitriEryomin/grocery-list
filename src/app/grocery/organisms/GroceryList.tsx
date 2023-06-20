@@ -9,18 +9,27 @@ import {
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 
-import {getGroceries} from '../services';
+import {toggleGroceryComplete, getGroceries} from '../services';
 
 type GroceryListProps = {
   onEdit: (id: string) => void;
 };
 
 export const GroceryList = ({onEdit}: GroceryListProps) => {
+  const queryClient = useQueryClient();
+
   const {data, isLoading} = useQuery({
     queryKey: ['groceries'],
     queryFn: getGroceries,
+  });
+
+  const mutation = useMutation({
+    mutationFn: toggleGroceryComplete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['groceries']});
+    },
   });
 
   return isLoading ? (
@@ -37,18 +46,31 @@ export const GroceryList = ({onEdit}: GroceryListProps) => {
             </IconButton>
           }
         >
-          <ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              mutation.mutate({
+                id: _id,
+                completed: !grocery.completed,
+              });
+            }}
+            dense
+          >
             <ListItemIcon>
               <Checkbox
                 edge="start"
-                checked
+                checked={grocery.completed}
                 tabIndex={-1}
                 disableRipple
-                inputProps={{'aria-labelledby': 'item'}}
+                inputProps={{'aria-labelledby': _id}}
               />
             </ListItemIcon>
             <ListItemText
-              id={'item'}
+              id={_id}
+              sx={{
+                '& .MuiListItemText-primary': {
+                  textDecoration: grocery.completed ? 'line-through' : 'normal',
+                },
+              }}
               primary={grocery.name}
               secondary={`${grocery.quantityType}: ${grocery.quantity}`}
             />

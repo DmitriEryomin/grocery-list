@@ -19,6 +19,19 @@ export async function createGrocery(grocery: Omit<Grocery, '_id'>) {
   });
 }
 
+export async function toggleGroceryComplete({
+  id,
+  completed,
+}: {
+  id: string;
+  completed: boolean;
+}) {
+  return await fetch(`/groceries/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({completed}),
+  });
+}
+
 export async function editGrocery({_id, ...grocery}: Grocery) {
   return await fetch(`/groceries/${_id}`, {
     method: 'PUT',
