@@ -5,7 +5,7 @@ import {Button, Grid, Drawer, TextField, IconButton, Box} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-import {QuantityFormControl} from '../molecules/QuantityFormControl';
+import {QuantityFormControl, EditGroceryFormSkeleton} from '../molecules';
 import {useGroceryForm} from '../hooks/useGroceryForm';
 import {editGrocery, getGrocery} from '../services';
 
@@ -84,7 +84,7 @@ export const EditGroceryForm = ({id, open, onClose}: EditGroceryFormProps) => {
         }}
       >
         {isLoading ? (
-          <h1>Loading...</h1>
+          <EditGroceryFormSkeleton />
         ) : (
           <>
             <TextField

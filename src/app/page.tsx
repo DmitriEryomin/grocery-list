@@ -9,6 +9,7 @@ export default function Home() {
       <h2>Technical task for Gojilabs</h2>
       <h3>Used technologies</h3>
       <ul>
+        <li>Typescript</li>
         <li>Docker</li>
         <li>NextJS</li>
         <li>MongoDB</li>
